@@ -1,0 +1,55 @@
+{
+    "user": {
+        "favorite language": "Java",
+        "favorite color": "black",
+        "favorite movie": "Iron Man",
+        "favorite programming language": "Python",
+        "favorite superhero": "Iron Man"
+    },
+    "history": [
+        {
+            "user": "hello",
+            "stark": "Hello Atharva. STARK systems are online."
+        },
+        {
+            "user": "time",
+            "stark": "The current time is 22:19:48"
+        },
+        {
+            "user": "remember favorite movie is Iron Man",
+            "stark": "I'll remember that, Atharva."
+        },
+        {
+            "user": "what is my favorite movie",
+            "stark": "Your favorite movie is Iron Man."
+        },
+        {
+            "user": "hello",
+            "stark": "Hello Atharva. STARK systems are online."
+        },
+        {
+            "user": "hey stark",
+            "stark": "Hello Atharva. STARK systems are online."
+        },
+        {
+            "user": "what time is it",
+            "stark": "The current time is 22:34:36"
+        },
+        {
+            "user": "do you remimber my favourite movie?",
+            "stark": "I am still learning this command."
+        },
+        {
+            "user": "do you remember my favorite movie?",
+            "stark": "Your favorite movie is Iron Man."
+        },
+        {
+            "user": "remember favorite superhero is Iron Man",
+            "stark": "I'll remember that, Atharva."
+        },
+        {
+            "user": "what is my favorite superhero?",
+            "stark": "Your favorite superhero is Iron Man."
+        }
+    ]
+}
