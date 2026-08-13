@@ -131,6 +131,10 @@
         {
             "user": "what about my favorite color?",
             "stark": "Your favorite color is black."
+        },
+        {
+            "user": "what about my favorite color?",
+            "stark": "Your favorite color is black."
         }
     ]
 }
