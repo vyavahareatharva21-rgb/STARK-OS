@@ -1,3 +1,6 @@
+from core.memory import get_recent_history
+
+
 def resolve_context(command):
     command = command.lower().strip()
 
@@ -23,3 +26,7 @@ def resolve_context(command):
         )
 
     return command
+
+
+def get_context():
+    return get_recent_history(limit=5)
