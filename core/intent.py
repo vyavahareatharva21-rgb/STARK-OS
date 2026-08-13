@@ -48,6 +48,19 @@ def detect_intent(command):
     ):
         return "remember"
 
+
+    # CONTEXT RECALL
+    context_phrases = [
+        "what about ",
+        "and my ",
+        "how about my ",
+    ]
+
+    if any(phrase in command for phrase in context_phrases):
+        return "context_recall"
+
+
+
     # RECALL
     recall_phrases = [
         "what is my ",
