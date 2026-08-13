@@ -50,6 +50,22 @@
         {
             "user": "what is my favorite superhero?",
             "stark": "Your favorite superhero is Iron Man."
+        },
+        {
+            "user": "hello",
+            "stark": "Hello Atharva. STARK systems are online."
+        },
+        {
+            "user": "what time is it",
+            "stark": "The current time is 21:25:10"
+        },
+        {
+            "user": "help",
+            "stark": "\nAvailable commands:\n\n- hello / hey stark\n- time / what time is it\n- remember [key] is [value]\n- what is my [key]\n- do you remember my [key]\n- help\n- exit\n"
+        },
+        {
+            "user": "what is my favorite language",
+            "stark": "Your favorite language is Java."
         }
     ]
 }
