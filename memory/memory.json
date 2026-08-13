@@ -106,6 +106,18 @@
         {
             "user": "what is my favorite movie",
             "stark": "Your favorite movie is Iron Man."
+        },
+        {
+            "user": "hello",
+            "stark": "Hello Atharva. STARK systems are online."
+        },
+        {
+            "user": "what do you remember",
+            "stark": "Here's what I remember:\n- favorite language: Java\n- favorite color: black\n- favorite movie: Iron Man\n- favorite programming language: Python\n- favorite superhero: Iron Man\n"
+        },
+        {
+            "user": "what is my favorite language",
+            "stark": "Your favorite language is Java."
         }
     ]
 }

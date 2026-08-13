@@ -45,6 +45,17 @@ def add_history(user_input, response):
 
     save_memory(memory)
 
+
 def get_all_memories():
     memory = load_memory()
     return memory.get("user", {})
+
+
+def get_history():
+    memory = load_memory()
+    return memory.get("history", [])
+
+
+def get_recent_history(limit=5):
+    history = get_history()
+    return history[-limit:]
