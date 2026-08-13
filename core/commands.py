@@ -1,6 +1,6 @@
 import datetime
 
-from core.memory import remember, recall
+from core.memory import remember, recall, get_all_memories
 from core.intent import detect_intent
 
 
@@ -39,6 +39,12 @@ def process_command(command):
             key = command.lower().split("what is my ", 1)[1].strip(" ?!.,")
         elif "do you remember my " in lower_command:
             key = command.lower().split("do you remember my ", 1)[1].strip(" ?!.,")
+        elif "what's my " in lower_command:
+            key = command.lower().split("what's my ", 1)[1].strip(" ?!.,")
+        elif "tell me my " in lower_command:
+            key = command.lower().split("tell me my ", 1)[1].strip(" ?!.,")
+        elif "show me my " in lower_command:
+            key = command.lower().split("show me my ", 1)[1].strip(" ?!.,")
         else:
             return "Tell me what you want me to remember."
 
@@ -49,6 +55,20 @@ def process_command(command):
 
         return f"I don't remember your {key} yet."
 
+    # MEMORY OVERVIEW
+    elif intent == "memory_overview":
+        memories = get_all_memories()
+
+        if not memories:
+            return "I don't have any memories stored yet."
+
+        response = "Here's what I remember:\n"
+
+        for key, value in memories.items():
+            response += f"- {key}: {value}\n"
+
+        return response
+
     # HELP
     elif intent == "help":
         return """
@@ -58,7 +78,12 @@ Available commands:
 - time / what time is it
 - remember [key] is [value]
 - what is my [key]
+- what's my [key]
 - do you remember my [key]
+- tell me my [key]
+- show me my [key]
+- what do you remember
+- show my memories
 - help
 - exit
 """

@@ -1,22 +1,83 @@
 def detect_intent(command):
     command = command.lower().strip()
 
-    if command in ["exit", "quit", "shutdown", "shut down"]:
+    # EXIT
+    if command in [
+        "exit",
+        "quit",
+        "shutdown",
+        "shut down",
+        "goodbye",
+        "bye",
+    ]:
         return "exit"
 
-    if "hello" in command or "hi stark" in command or "hey stark" in command:
+    # GREETING
+    greeting_phrases = [
+        "hello",
+        "hi",
+        "hey",
+        "hey stark",
+        "hi stark",
+        "hello stark",
+        "good morning",
+        "good afternoon",
+        "good evening",
+    ]
+
+    if any(phrase in command for phrase in greeting_phrases):
         return "greeting"
 
-    if "time" in command or "what time" in command:
+    # TIME
+    time_phrases = [
+        "time",
+        "what time",
+        "current time",
+        "tell me the time",
+        "what's the time",
+        "what is the time",
+    ]
+
+    if any(phrase in command for phrase in time_phrases):
         return "time"
 
-    if command.startswith("remember "):
+    # REMEMBER
+    if (
+        command.startswith("remember ")
+        or command.startswith("remember that ")
+    ):
         return "remember"
 
-    if "what is my " in command or "do you remember my " in command:
+    # RECALL
+    recall_phrases = [
+        "what is my ",
+        "what's my ",
+        "do you remember my ",
+        "tell me my ",
+        "show me my ",
+    ]
+
+    if any(phrase in command for phrase in recall_phrases):
         return "recall"
 
-    if command == "help" or "what can you do" in command:
+    # MEMORY OVERVIEW
+    memory_phrases = [
+        "what do you remember",
+        "show my memories",
+        "show memories",
+        "what have you remembered",
+        "what do you know about me",
+    ]
+
+    if any(phrase in command for phrase in memory_phrases):
+        return "memory_overview"
+
+    # HELP
+    if (
+        command == "help"
+        or "what can you do" in command
+        or "what are your commands" in command
+    ):
         return "help"
 
     return "unknown"

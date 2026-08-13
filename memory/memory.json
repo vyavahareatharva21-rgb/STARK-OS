@@ -66,6 +66,46 @@
         {
             "user": "what is my favorite language",
             "stark": "Your favorite language is Java."
+        },
+        {
+            "user": "what do you remember",
+            "stark": "Here's what I remember:\n- favorite language: Java\n- favorite color: black\n- favorite movie: Iron Man\n- favorite programming language: Python\n- favorite superhero: Iron Man\n"
+        },
+        {
+            "user": "show my memories",
+            "stark": "Here's what I remember:\n- favorite language: Java\n- favorite color: black\n- favorite movie: Iron Man\n- favorite programming language: Python\n- favorite superhero: Iron Man\n"
+        },
+        {
+            "user": "what's my favorite language",
+            "stark": "Your favorite language is Java."
+        },
+        {
+            "user": "tell me my favorite color",
+            "stark": "Your favorite color is black."
+        },
+        {
+            "user": "what is my favorite movie",
+            "stark": "Your favorite movie is Iron Man."
+        },
+        {
+            "user": "what do you remember",
+            "stark": "Here's what I remember:\n- favorite language: Java\n- favorite color: black\n- favorite movie: Iron Man\n- favorite programming language: Python\n- favorite superhero: Iron Man\n"
+        },
+        {
+            "user": "show my memories",
+            "stark": "Here's what I remember:\n- favorite language: Java\n- favorite color: black\n- favorite movie: Iron Man\n- favorite programming language: Python\n- favorite superhero: Iron Man\n"
+        },
+        {
+            "user": "what's my favorite language",
+            "stark": "Your favorite language is Java."
+        },
+        {
+            "user": "tell me my favorite color",
+            "stark": "Your favorite color is black."
+        },
+        {
+            "user": "what is my favorite movie",
+            "stark": "Your favorite movie is Iron Man."
         }
     ]
 }

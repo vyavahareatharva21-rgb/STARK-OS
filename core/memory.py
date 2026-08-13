@@ -44,3 +44,7 @@ def add_history(user_input, response):
     })
 
     save_memory(memory)
+
+def get_all_memories():
+    memory = load_memory()
+    return memory.get("user", {})
