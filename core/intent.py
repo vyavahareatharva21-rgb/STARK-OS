@@ -25,7 +25,8 @@ def detect_intent(command):
         "good evening",
     ]
 
-    if any(phrase in command for phrase in greeting_phrases):
+    # Match greetings as complete phrases, not substrings.
+    if command in greeting_phrases:
         return "greeting"
 
     # TIME
@@ -55,11 +56,8 @@ def detect_intent(command):
         "and my ",
     ]
 
-    if any(phrase in command for phrase in context_phrases):
+    if any(command.startswith(phrase) for phrase in context_phrases):
         return "context_recall"
-
-
-    
 
     # RECALL
     recall_phrases = [
@@ -94,4 +92,5 @@ def detect_intent(command):
     ):
         return "help"
 
+    # UNKNOWN → Gemini AI
     return "unknown"
