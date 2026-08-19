@@ -2,6 +2,7 @@ from core.commands import process_command
 from core.intent import detect_intent
 from core.memory import get_recent_history
 from core.context import resolve_context
+from ai.engine import ai_engine
 
 
 def think(command):
@@ -24,6 +25,12 @@ def think(command):
         return process_command(command)
 
     if intent == "unknown":
-        return "I don't understand that command yet."
+        print("[DEBUG] Sending command to Gemini AI")
+
+        try:
+            return ai_engine.generate(command)
+        except Exception as error:
+            print(f"[AI ERROR] {error}")
+            return "I'm having trouble connecting to my AI system right now."
 
     return process_command(command)

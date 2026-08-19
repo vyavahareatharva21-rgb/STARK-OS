@@ -1,33 +1,57 @@
+import os
+from google import genai
+from google.genai import types
+
+
 class AIEngine:
     """
     STARK-OS AI Engine.
 
-    This class provides a provider-independent interface
-    for future AI model integrations.
+    Gemini handles natural-language questions and
+    requests that the local command system does not understand.
     """
 
     def __init__(self):
-        self.provider = None
-        self.model = None
+        self.provider = "gemini"
+        self.model = "gemini-3.6-flash"
 
-    def configure(self, provider, model=None):
-        """
-        Configure the AI provider.
-        """
-        self.provider = provider
-        self.model = model
+        api_key = os.getenv("GEMINI_API_KEY")
+
+        if not api_key:
+            raise RuntimeError("GEMINI_API_KEY is not set.")
+
+        self.client = genai.Client(api_key=api_key)
+
+        self.system_instruction = """
+You are STARK, a personal AI assistant.
+
+Your personality:
+- Intelligent
+- Calm
+- Helpful
+- Concise
+- Professional
+- Slightly futuristic
+
+You are running inside STARK-OS.
+
+Rules:
+- Answer the user's question directly.
+- Keep responses reasonably concise.
+- Do not claim to control the computer unless STARK-OS explicitly provides that capability.
+- Do not pretend to have performed actions you cannot perform.
+"""
 
     def generate(self, prompt):
-        """
-        Generate an AI response.
+        response = self.client.models.generate_content(
+            model=self.model,
+            contents=prompt,
+            config=types.GenerateContentConfig(
+                system_instruction=self.system_instruction,
+            ),
+        )
 
-        AI provider integration will be added here.
-        """
-        if self.provider is None:
-            return None
-
-        return None
+        return response.text.strip()
 
 
-# Global AI engine instance
 ai_engine = AIEngine()
