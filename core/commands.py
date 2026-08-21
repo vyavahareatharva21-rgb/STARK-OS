@@ -2,6 +2,7 @@ import datetime
 
 from core.memory import remember, recall, get_all_memories
 from core.intent import detect_intent
+from core.context import normalize_command
 
 
 def process_command(command):
@@ -25,7 +26,8 @@ def process_command(command):
 
         if " is " in information.lower():
             key, value = information.split(" is ", 1)
-            key = key.strip().lower()
+
+            key = normalize_command(key.strip())
             value = value.strip()
 
             remember(key, value)
@@ -35,16 +37,33 @@ def process_command(command):
 
     # RECALL
     elif intent == "recall":
-        if "what is my " in lower_command:
-            key = command.lower().split("what is my ", 1)[1].strip(" ?!.,")
-        elif "do you remember my " in lower_command:
-            key = command.lower().split("do you remember my ", 1)[1].strip(" ?!.,")
-        elif "what's my " in lower_command:
-            key = command.lower().split("what's my ", 1)[1].strip(" ?!.,")
-        elif "tell me my " in lower_command:
-            key = command.lower().split("tell me my ", 1)[1].strip(" ?!.,")
-        elif "show me my " in lower_command:
-            key = command.lower().split("show me my ", 1)[1].strip(" ?!.,")
+        normalized_command = normalize_command(command)
+
+        if "what is my " in normalized_command:
+            key = normalized_command.split(
+                "what is my ", 1
+            )[1].strip(" ?!.,")
+        
+        elif "do you remember my " in normalized_command:
+            key = normalized_command.split(
+                "do you remember my ", 1
+            )[1].strip(" ?!.,")
+        
+        elif "what's my " in normalized_command:
+            key = normalized_command.split(
+                "what's my ", 1
+            )[1].strip(" ?!.,")
+        
+        elif "tell me my " in normalized_command:
+            key = normalized_command.split(
+                "tell me my ", 1
+            )[1].strip(" ?!.,")
+        
+        elif "show me my " in normalized_command:
+            key = normalized_command.split(
+                "show me my ", 1
+            )[1].strip(" ?!.,")
+        
         else:
             return "Tell me what you want me to remember."
 
