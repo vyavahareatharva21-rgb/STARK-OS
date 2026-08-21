@@ -1,49 +1,72 @@
-from core.memory import get_recent_history, get_all_memories
+from core.context import get_relevant_context
 
 
 def build_ai_prompt(command):
     """
     Build the context sent to Gemini.
 
-    Includes:
-    - Current user request
-    - Stored STARK memories
+    The Context Engine decides whether STARK needs:
+    - Long-term user memory
     - Recent conversation history
+    - Neither
     """
 
-    memories = get_all_memories()
-    recent_history = get_recent_history(limit=5)
+    context = get_relevant_context(command)
 
-    memory_text = "\n".join(
-        f"- {key}: {value}"
-        for key, value in memories.items()
-    )
+    normalized_command = context["command"]
+    memories = context["memories"]
+    history = context["history"]
 
-    history_text = "\n".join(
-        f"User: {entry['user']}\nSTARK: {entry['stark']}"
-        for entry in recent_history
-    )
+    # --------------------------------------------------------
+    # MEMORY
+    # --------------------------------------------------------
+
+    if memories:
+        memory_text = "\n".join(
+            f"- {key}: {value}"
+            for key, value in memories.items()
+        )
+    else:
+        memory_text = "No relevant memories."
+
+    # --------------------------------------------------------
+    # HISTORY
+    # --------------------------------------------------------
+
+    if history:
+        history_text = "\n".join(
+            f"User: {entry['user']}\nSTARK: {entry['stark']}"
+            for entry in history
+        )
+    else:
+        history_text = "No relevant conversation history."
+
+    # --------------------------------------------------------
+    # PROMPT
+    # --------------------------------------------------------
 
     prompt = f"""
 You are operating as STARK-OS.
 
-The user's current request is:
+CURRENT USER REQUEST:
+{normalized_command}
 
-{command}
+RELEVANT STARK MEMORY:
+{memory_text}
 
-STARK MEMORY:
-{memory_text if memory_text else "No stored memories."}
-
-RECENT CONVERSATION:
-{history_text if history_text else "No recent conversation."}
+RELEVANT CONVERSATION:
+{history_text}
 
 Instructions:
-- Use STARK MEMORY when it is relevant to the user's request.
-- Use RECENT CONVERSATION when it helps understand the request.
-- Do not reveal internal memory structure unless the user asks.
-- Do not invent personal information about the user.
+- Use relevant STARK memory when provided.
+- Use relevant conversation history when provided.
+- If no relevant context is provided, answer normally.
+- Do not reveal internal memory structures unless explicitly asked.
+- Do not invent personal information.
+- If the user refers to something like "it", "that", or "they",
+  use the provided conversation history to determine what they mean.
 - Answer naturally as STARK.
-- Keep the answer concise unless the user asks for detail.
+- Keep responses concise unless the user asks for detail.
 """
 
     return prompt
