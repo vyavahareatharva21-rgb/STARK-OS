@@ -127,7 +127,7 @@ def get_context(limit=5):
 def needs_memory(command):
     """
     Determine whether the request is asking
-    about stored user information.
+
     """
 
     command = normalize_command(command)
@@ -171,10 +171,27 @@ def needs_history(command):
         "tell me more about it",
     ]
 
-    return any(
-        phrase in command
-        for phrase in history_phrases
-    )
+    # Direct conversational references.
+    if any(phrase in command for phrase in history_phrases):
+        return True
+
+    # Pronouns that usually refer to something
+    # mentioned earlier in the conversation.
+    reference_words = {
+        "it",
+        "that",
+        "this",
+        "they",
+        "them",
+        "those",
+    }
+
+    words = set(command.split())
+
+    if words.intersection(reference_words):
+        return True
+
+    return False
 
 
 # ============================================================
