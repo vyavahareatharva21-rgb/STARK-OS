@@ -31,7 +31,7 @@ def think(command):
         try:
             prompt = build_ai_prompt(command)
 
-            return ai_engine.generate(prompt)
+            return ai_engine.ask(prompt)
 
         except Exception as error:
             print(f"[AI ERROR] {error}")

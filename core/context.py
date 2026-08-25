@@ -16,6 +16,13 @@ NORMALIZATION_MAP = {
     "colour": "color",
     "programme": "program",
     "programmes": "programs",
+
+    # Common question typos
+    "whan": "when",
+    "wht": "what",
+    "wat": "what",
+    "wich": "which",
+    "creatd": "created",
 }
 
 

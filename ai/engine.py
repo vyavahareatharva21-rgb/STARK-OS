@@ -1,4 +1,8 @@
 import os
+from dotenv import load_dotenv
+
+load_dotenv()
+
 from google import genai
 from google.genai import types
 
@@ -33,25 +37,35 @@ Your personality:
 - Professional
 - Slightly futuristic
 
-You are running inside STARK-OS.
-
-Rules:
-- Answer the user's question directly.
-- Keep responses reasonably concise.
-- Do not claim to control the computer unless STARK-OS explicitly provides that capability.
-- Do not pretend to have performed actions you cannot perform.
+Answer the user's questions clearly and naturally.
 """
 
-    def generate(self, prompt):
+    def ask(self, prompt, context=None):
+        """
+        Send a prompt to Gemini and return the response.
+        """
+
+        contents = prompt
+
+        if context:
+            contents = f"""
+Context:
+{context}
+
+User:
+{prompt}
+"""
+
         response = self.client.models.generate_content(
             model=self.model,
-            contents=prompt,
+            contents=contents,
             config=types.GenerateContentConfig(
                 system_instruction=self.system_instruction,
+                temperature=0.7,
             ),
         )
 
-        return response.text.strip()
+        return response.text
 
 
 ai_engine = AIEngine()
