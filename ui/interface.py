@@ -93,6 +93,9 @@ def status(message, level="info"):
 
     print(f"{prefix} {message}")
 
+def processing(message="Processing"):
+    """Display a subtle processing indicator."""
+    print(f"{accent('STARK')} {muted('•')} {message}...")
 
 def startup_screen():
     """Render the complete STARK startup screen."""

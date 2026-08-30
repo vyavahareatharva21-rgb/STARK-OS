@@ -2,7 +2,7 @@ from core.brain import think
 from core.memory import add_history
 from core.personality import shutdown_message
 
-from ui.interface import startup_screen, prompt
+from ui.interface import startup_screen, prompt, processing
 
 
 def main():
@@ -14,6 +14,25 @@ def main():
 
             if not user_input:
                 continue
+
+            # Exit commands should shut down immediately
+            # without showing a processing message.
+            exit_commands = {
+                "exit",
+                "quit",
+                "shutdown",
+            }
+
+            if user_input.lower() in exit_commands:
+                response = think(user_input)
+
+                if response == "EXIT":
+                    print()
+                    print(shutdown_message())
+                    break
+
+            # Show processing state for normal commands.
+            processing()
 
             response = think(user_input)
 
@@ -29,12 +48,12 @@ def main():
             print()
 
         except KeyboardInterrupt:
-            print("\n")
+            print()
             print(shutdown_message())
             break
 
         except EOFError:
-            print("\n")
+            print()
             print(shutdown_message())
             break
 

@@ -1,10 +1,11 @@
 import os
+
 from dotenv import load_dotenv
-
-load_dotenv()
-
 from google import genai
 from google.genai import types
+
+
+load_dotenv()
 
 
 class AIEngine:
@@ -38,14 +39,22 @@ Your personality:
 - Slightly futuristic
 
 Answer the user's questions clearly and naturally.
+Do not pretend to control systems or devices unless
+the user explicitly asks for a capability that exists.
 """
+
+        self.config = types.GenerateContentConfig(
+            system_instruction=self.system_instruction,
+            temperature=0.7,
+            automatic_function_calling=types.AutomaticFunctionCallingConfig(
+                disable=True
+            ),
+        )
 
     def ask(self, prompt, context=None):
         """
         Send a prompt to Gemini and return the response.
         """
-
-        contents = prompt
 
         if context:
             contents = f"""
@@ -55,17 +64,19 @@ Context:
 User:
 {prompt}
 """
+        else:
+            contents = prompt
 
         response = self.client.models.generate_content(
             model=self.model,
             contents=contents,
-            config=types.GenerateContentConfig(
-                system_instruction=self.system_instruction,
-                temperature=0.7,
-            ),
+            config=self.config,
         )
 
-        return response.text
+        if not response or not response.text:
+            return "I received an empty response from my AI system."
+
+        return response.text.strip()
 
 
 ai_engine = AIEngine()
