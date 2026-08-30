@@ -41,6 +41,7 @@ def system_indicator(name, active):
     """Render a system status indicator."""
     if active:
         return f"{success('●')} {name:<10} {success('ACTIVE')}"
+
     return f"{error('●')} {name:<10} {error('OFFLINE')}"
 
 
@@ -79,23 +80,35 @@ def prompt():
     return f"{accent('You')} {muted('›')} "
 
 
+def processing(message="Processing"):
+    """Display a subtle processing state."""
+    print(f"{accent('STARK')} {muted('•')} {message}...")
+
+
+def response(text):
+    """Display a STARK response."""
+    print()
+    print(f"{accent('STARK')} {muted('›')} {text}")
+    print()
+
+
 def status(message, level="info"):
     """Display a system status message."""
 
     if level == "success":
         prefix = success("✓")
+
     elif level == "warning":
         prefix = warning("!")
+
     elif level == "error":
         prefix = error("×")
+
     else:
         prefix = accent("•")
 
     print(f"{prefix} {message}")
 
-def processing(message="Processing"):
-    """Display a subtle processing indicator."""
-    print(f"{accent('STARK')} {muted('•')} {message}...")
 
 def startup_screen():
     """Render the complete STARK startup screen."""

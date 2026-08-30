@@ -1,8 +1,28 @@
 from core.brain import think
 from core.memory import add_history
 from core.personality import shutdown_message
+from core.intent import detect_intent
 
-from ui.interface import startup_screen, prompt, processing
+from ui.interface import (
+    startup_screen,
+    prompt,
+    processing,
+    response,
+)
+
+
+def get_processing_message(intent):
+    """Return the appropriate UI state for an intent."""
+
+    states = {
+        "remember": "Updating memory",
+        "recall": "Accessing memory",
+        "context_recall": "Resolving context",
+        "memory_overview": "Loading memory",
+        "unknown": "Thinking",
+    }
+
+    return states.get(intent)
 
 
 def main():
@@ -15,37 +35,34 @@ def main():
             if not user_input:
                 continue
 
-            # Exit commands should shut down immediately
-            # without showing a processing message.
-            exit_commands = {
-                "exit",
-                "quit",
-                "shutdown",
-            }
+            intent = detect_intent(user_input)
 
-            if user_input.lower() in exit_commands:
-                response = think(user_input)
+            # Exit immediately without a processing state.
+            if intent == "exit":
+                response_text = think(user_input)
 
-                if response == "EXIT":
+                if response_text == "EXIT":
                     print()
                     print(shutdown_message())
                     break
 
-            # Show processing state for normal commands.
-            processing()
+            # Show an appropriate state for operations
+            # that require processing.
+            processing_message = get_processing_message(intent)
 
-            response = think(user_input)
+            if processing_message:
+                processing(processing_message)
 
-            if response == "EXIT":
+            response_text = think(user_input)
+
+            if response_text == "EXIT":
                 print()
                 print(shutdown_message())
                 break
 
-            add_history(user_input, response)
+            add_history(user_input, response_text)
 
-            print()
-            print(f"STARK › {response}")
-            print()
+            response(response_text)
 
         except KeyboardInterrupt:
             print()
