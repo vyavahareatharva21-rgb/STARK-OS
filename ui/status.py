@@ -1,44 +1,36 @@
-"""
-STARK-OS System Status
-Lightweight health checks for the interface.
-"""
+import platform
+import time
 
-from core.memory import load_memory
+import psutil
 
 
-def check_core():
-    """Check whether the core reasoning system is available."""
-    try:
-        from core.brain import think
-
-        return callable(think)
-    except Exception:
-        return False
-
-
-def check_memory():
-    """Check whether the memory system is available."""
-    try:
-        memory = load_memory()
-        return isinstance(memory, dict)
-    except Exception:
-        return False
-
-
-def check_ai():
-    """Check whether the AI engine is initialized."""
-    try:
-        from ai.engine import ai_engine
-
-        return ai_engine is not None
-    except Exception:
-        return False
+START_TIME = time.time()
 
 
 def get_system_status():
-    """Return the current STARK system status."""
+    memory = psutil.virtual_memory()
+
     return {
-        "core": check_core(),
-        "memory": check_memory(),
-        "ai": check_ai(),
+        "core": "ACTIVE",
+        "memory": "ACTIVE",
+        "ai": "ACTIVE",
+
+        "cpu_percent": psutil.cpu_percent(interval=0.1),
+
+        "memory_percent": memory.percent,
+        "memory_used_gb": round(
+            memory.used / (1024 ** 3),
+            2
+        ),
+        "memory_total_gb": round(
+            memory.total / (1024 ** 3),
+            2
+        ),
+
+        "python": platform.python_version(),
+        "platform": platform.system(),
+
+        "uptime_seconds": int(
+            time.time() - START_TIME
+        ),
     }

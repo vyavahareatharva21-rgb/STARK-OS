@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>STARK-OS</title>
+
+    <link rel="stylesheet" href="/ui/web/style.css">
+</head>
+
+<body>
+
+    <main class="stark-app">
+
+        <header class="topbar">
+
+            <div>
+                <div class="brand">STARK-OS</div>
+                <div class="subtitle">PERSONAL AI WORKSTATION</div>
+            </div>
+
+            <div class="system-status">
+                <span>CORE <b id="core-status">●</b></span>
+                <span>MEMORY <b id="memory-status">●</b></span>
+                <span>AI <b id="ai-status">●</b></span>
+            </div>
+
+        </header>
+
+
+        <section class="workspace">
+
+            <aside class="sidebar">
+
+                <!-- SYSTEM -->
+
+                <div class="panel">
+
+                    <div class="panel-title">SYSTEM</div>
+
+                    <div class="metric">
+                        <span>CORE</span>
+                        <strong id="core-text">ACTIVE</strong>
+                    </div>
+
+                    <div class="metric">
+                        <span>MEMORY</span>
+                        <strong id="memory-text">ACTIVE</strong>
+                    </div>
+
+                    <div class="metric">
+                        <span>AI ENGINE</span>
+                        <strong id="ai-text">READY</strong>
+                    </div>
+
+                </div>
+
+
+                <!-- LIVE MONITOR -->
+
+                <div class="panel">
+
+                    <div class="panel-title">SYSTEM MONITOR</div>
+
+                    <div class="metric">
+                        <span>CPU</span>
+                        <strong id="cpu-value">--%</strong>
+                    </div>
+
+                    <div class="metric">
+                        <span>RAM</span>
+                        <strong id="ram-value">--%</strong>
+                    </div>
+
+                    <div class="metric">
+                        <span>MEMORY</span>
+                        <strong id="memory-usage">-- / -- GB</strong>
+                    </div>
+
+                    <div class="metric">
+                        <span>PYTHON</span>
+                        <strong id="python-value">--</strong>
+                    </div>
+
+                    <div class="metric">
+                        <span>PLATFORM</span>
+                        <strong id="platform-value">--</strong>
+                    </div>
+
+                    <div class="metric">
+                        <span>UPTIME</span>
+                        <strong id="uptime-value">--</strong>
+                    </div>
+
+                </div>
+
+
+                <!-- MODULES -->
+
+                <div class="panel">
+
+                    <div class="panel-title">MODULES</div>
+
+                    <button>AI CONSOLE</button>
+                    <button>MEMORY</button>
+                    <button>SYSTEM</button>
+                    <button>AUTOMATION</button>
+
+                </div>
+
+            </aside>
+
+
+            <!-- CONSOLE -->
+
+            <section class="console">
+
+                <div class="console-header">
+
+                    <div>
+
+                        <div class="panel-title">
+                            STARK CONSOLE
+                        </div>
+
+                        <div
+                            class="console-state"
+                            id="state"
+                        >
+                            SYSTEM READY
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- MESSAGES -->
+
+                <div
+                    id="messages"
+                    class="messages"
+                >
+
+                    <div class="message stark-message">
+
+                        <div class="message-label">
+                            STARK
+                        </div>
+
+                        <div>
+                            Good evening, Atharva.<br>
+                            How can I assist you?
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- INPUT -->
+
+                <form
+                    id="chat-form"
+                    class="input-area"
+                >
+
+                    <span class="prompt">
+                        YOU ›
+                    </span>
+
+                    <input
+                        id="message-input"
+                        type="text"
+                        autocomplete="off"
+                        placeholder="Enter command..."
+                    >
+
+                    <button type="submit">
+                        SEND
+                    </button>
+
+                </form>
+
+            </section>
+
+        </section>
+
+    </main>
+
+
+    <script src="/ui/web/app.js"></script>
+
+</body>
+</html>
