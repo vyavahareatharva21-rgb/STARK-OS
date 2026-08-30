@@ -18,6 +18,8 @@ from ui.theme import (
     LINE,
 )
 
+from ui.status import get_system_status
+
 
 def clear_screen():
     """Clear the terminal screen."""
@@ -35,19 +37,30 @@ def divider():
     print(muted(LINE * width))
 
 
+def system_indicator(name, active):
+    """Render a system status indicator."""
+    if active:
+        return f"{success('●')} {name:<10} {success('ACTIVE')}"
+    return f"{error('●')} {name:<10} {error('OFFLINE')}"
+
+
 def header():
     """Render the STARK-OS header."""
-    width = min(terminal_width(), 100)
 
     print()
     print(accent("  STARK-OS"))
     print(muted("  PERSONAL AI WORKSTATION"))
     divider()
 
+    status = get_system_status()
+
     print(
-        f"  {success('●')} Core       {success('ACTIVE')}     "
-        f"{success('●')} Memory     {success('READY')}     "
-        f"{success('●')} AI         {success('READY')}"
+        "  "
+        + system_indicator("Core", status["core"])
+        + "     "
+        + system_indicator("Memory", status["memory"])
+        + "     "
+        + system_indicator("AI", status["ai"])
     )
 
     divider()

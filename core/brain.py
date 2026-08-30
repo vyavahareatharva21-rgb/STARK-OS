@@ -1,3 +1,5 @@
+import os
+
 from core.commands import process_command
 from core.intent import detect_intent
 from core.context import (
@@ -6,6 +8,15 @@ from core.context import (
 )
 from core.ai_context import build_ai_prompt
 from ai.engine import ai_engine
+
+
+DEBUG = os.getenv("STARK_DEBUG", "0") == "1"
+
+
+def debug(message):
+    """Print diagnostic information when developer mode is enabled."""
+    if DEBUG:
+        print(f"[DEBUG] {message}")
 
 
 def think(command):
@@ -25,9 +36,8 @@ def think(command):
 
     intent = detect_intent(command)
 
-    print(f"[DEBUG] Intent detected: {intent}")
-
-    print("[DEBUG] Context engine ready")
+    debug(f"Intent detected: {intent}")
+    debug("Context engine ready")
 
     if intent == "exit":
         return "EXIT"
@@ -42,8 +52,8 @@ def think(command):
     command = resolve_command(command)
 
     if command != original_command.lower().strip():
-        print(
-            f"[DEBUG] Context resolved: "
+        debug(
+            f"Context resolved: "
             f"{original_command} -> {command}"
         )
 
@@ -59,7 +69,7 @@ def think(command):
     # --------------------------------------------------------
 
     if intent == "unknown":
-        print("[DEBUG] Sending command to Gemini AI")
+        debug("Sending command to Gemini AI")
 
         try:
             prompt = build_ai_prompt(command)
@@ -67,7 +77,7 @@ def think(command):
             return ai_engine.ask(prompt)
 
         except Exception as error:
-            print(f"[AI ERROR] {error}")
+            debug(f"AI ERROR: {error}")
 
             return (
                 "I'm having trouble connecting to my AI system "
