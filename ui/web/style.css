@@ -274,3 +274,17 @@ body {
         gap: 8px;
     }
 }
+
+/* ACTIVE MODULE */
+
+.sidebar button.active {
+    background: #171c21;
+    color: #e8edf2;
+    border-color: #39424b;
+}
+
+.sidebar button.active::before {
+    content: "●";
+    margin-right: 8px;
+    font-size: 7px;
+}

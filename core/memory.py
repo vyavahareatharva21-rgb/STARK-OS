@@ -9,6 +9,10 @@ MEMORY_FILE = os.path.join(
 )
 
 
+# ============================================================
+# MEMORY FILE
+# ============================================================
+
 def load_memory():
     """
     Load STARK's persistent memory from memory.json.
@@ -41,6 +45,20 @@ def save_memory(memory):
 # USER MEMORY
 # ============================================================
 
+def normalize_memory_key(key):
+    """
+    Normalize memory keys so equivalent keys
+    are stored consistently.
+    """
+
+    key = key.strip().lower()
+
+    if key.startswith("my "):
+        key = key[3:]
+
+    return key
+
+
 def remember(key, value):
     """
     Store or update a long-term user memory.
@@ -50,6 +68,8 @@ def remember(key, value):
 
     if "user" not in memory:
         memory["user"] = {}
+
+    key = normalize_memory_key(key)
 
     memory["user"][key] = value
 
@@ -62,6 +82,8 @@ def recall(key):
     """
 
     memory = load_memory()
+
+    key = normalize_memory_key(key)
 
     return memory.get("user", {}).get(key)
 

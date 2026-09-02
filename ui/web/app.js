@@ -313,3 +313,277 @@ setInterval(
     loadStatus,
     3000
 );
+
+// ---------------------------------------------------------
+// MODULE NAVIGATION
+// ---------------------------------------------------------
+
+const moduleButtons = document.querySelectorAll(".module-button");
+
+moduleButtons.forEach((button) => {
+
+    button.addEventListener("click", () => {
+
+        moduleButtons.forEach((item) => {
+            item.classList.remove("active");
+        });
+
+        button.classList.add("active");
+
+        const module = button.textContent.trim();
+
+        if (module === "AI CONSOLE") {
+
+            setState("AI CONSOLE");
+
+            messages.innerHTML = "";
+
+            addMessage(
+                "STARK",
+                "AI Console initialized. Systems ready.",
+                "stark-message"
+            );
+
+            input.focus();
+
+        }
+
+        else if (module === "MEMORY") {
+
+            loadMemoryModule();
+
+        }
+
+        else if (module === "SYSTEM") {
+
+            loadSystemModule();
+
+        }
+
+        else if (module === "AUTOMATION") {
+
+            loadAutomationModule();
+
+        }
+
+    });
+
+});
+// ---------------------------------------------------------
+// MEMORY MODULE
+// ---------------------------------------------------------
+
+async function loadMemoryModule() {
+
+    setState("ACCESSING MEMORY");
+
+    try {
+
+        const response = await fetch(
+            "/api/memory",
+            {
+                cache: "no-store"
+            }
+        );
+
+        if (!response.ok) {
+            throw new Error("Memory request failed");
+        }
+
+        const data = await response.json();
+
+        // Clear current messages
+        messages.innerHTML = "";
+
+        addMessage(
+            "STARK",
+            `Memory database contains ${data.count} stored entries.`,
+            "stark-message"
+        );
+
+        if (data.count === 0) {
+
+            addMessage(
+                "STARK",
+                "No memories are currently stored.",
+                "stark-message"
+            );
+
+        } else {
+
+            Object.entries(data.memories).forEach(
+                ([key, value]) => {
+
+                    addMessage(
+                        "MEMORY",
+                        `${key}: ${value}`,
+                        "stark-message"
+                    );
+
+                }
+            );
+
+        }
+
+        setState("MEMORY READY");
+
+    } catch (error) {
+
+        console.error(
+            "STARK memory error:",
+            error
+        );
+
+        addMessage(
+            "STARK",
+            "Unable to access the memory system.",
+            "stark-message"
+        );
+
+        setState("MEMORY ERROR");
+    }
+}
+
+
+
+// ---------------------------------------------------------
+// SYSTEM MODULE
+// ---------------------------------------------------------
+
+async function loadSystemModule() {
+
+    setState("ACCESSING SYSTEM");
+
+    try {
+
+        const response = await fetch(
+            "/api/status",
+            {
+                cache: "no-store"
+            }
+        );
+
+        if (!response.ok) {
+            throw new Error("System request failed");
+        }
+
+        const data = await response.json();
+
+        messages.innerHTML = "";
+
+        addMessage(
+            "STARK",
+            "Live system diagnostics initialized.",
+            "stark-message"
+        );
+
+        addMessage(
+            "SYSTEM",
+            `CORE: ${data.core}`,
+            "stark-message"
+        );
+
+        addMessage(
+            "SYSTEM",
+            `MEMORY: ${data.memory}`,
+            "stark-message"
+        );
+
+        addMessage(
+            "SYSTEM",
+            `AI ENGINE: ${data.ai}`,
+            "stark-message"
+        );
+
+        addMessage(
+            "SYSTEM",
+            `CPU: ${Number(data.cpu_percent).toFixed(1)}%`,
+            "stark-message"
+        );
+
+        addMessage(
+            "SYSTEM",
+            `RAM: ${Number(data.memory_percent).toFixed(1)}%`,
+            "stark-message"
+        );
+
+        addMessage(
+            "SYSTEM",
+            `MEMORY USAGE: ${Number(data.memory_used_gb).toFixed(2)} / ${Number(data.memory_total_gb).toFixed(1)} GB`,
+            "stark-message"
+        );
+
+        addMessage(
+            "SYSTEM",
+            `PYTHON: ${data.python}`,
+            "stark-message"
+        );
+
+        addMessage(
+            "SYSTEM",
+            `PLATFORM: ${data.platform}`,
+            "stark-message"
+        );
+
+        addMessage(
+            "SYSTEM",
+            `UPTIME: ${formatUptime(data.uptime_seconds)}`,
+            "stark-message"
+        );
+
+        setState("SYSTEM READY");
+
+    } catch (error) {
+
+        console.error(
+            "STARK system error:",
+            error
+        );
+
+        addMessage(
+            "STARK",
+            "Unable to access system diagnostics.",
+            "stark-message"
+        );
+
+        setState("SYSTEM ERROR");
+    }
+}
+
+// ---------------------------------------------------------
+// AUTOMATION MODULE
+// ---------------------------------------------------------
+
+function loadAutomationModule() {
+
+    setState("AUTOMATION MODULE");
+
+    messages.innerHTML = "";
+
+    addMessage(
+        "STARK",
+        "Automation module initialized.",
+        "stark-message"
+    );
+
+    addMessage(
+        "AUTOMATION",
+        "Task automation framework is ready.",
+        "stark-message"
+    );
+
+    addMessage(
+        "AUTOMATION",
+        "Scheduled tasks: 0",
+        "stark-message"
+    );
+
+    addMessage(
+        "AUTOMATION",
+        "Background agents: 0",
+        "stark-message"
+    );
+
+    setState("AUTOMATION READY");
+
+}

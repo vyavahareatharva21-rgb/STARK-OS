@@ -56,17 +56,16 @@ def think(command):
             f"Context resolved: "
             f"{original_command} -> {command}"
         )
-
     # --------------------------------------------------------
     # Personal memory/context commands
     # --------------------------------------------------------
 
-    if intent == "context_recall":
+    if intent in ("context_recall", "recall"):
         return process_command(command)
 
     # --------------------------------------------------------
     # AI commands
-    # --------------------------------------------------------
+    # ---------------------------------------------------------
 
     if intent == "unknown":
         debug("Sending command to Gemini AI")

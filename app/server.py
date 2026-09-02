@@ -1,5 +1,5 @@
 from pathlib import Path
-
+from core.memory import get_all_memories
 from fastapi import FastAPI
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
@@ -31,6 +31,15 @@ def home():
 @app.get("/api/status")
 def system_status():
     return get_system_status()
+
+@app.get("/api/memory")
+def memory_status():
+    memories = get_all_memories()
+
+    return {
+        "count": len(memories),
+        "memories": memories,
+    }
 
 
 @app.post("/api/chat")
