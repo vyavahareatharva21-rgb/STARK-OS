@@ -42,11 +42,17 @@ def detect_intent(command):
     if any(phrase in command for phrase in time_phrases):
         return "time"
 
-    # REMEMBER
-    if (
-        command.startswith("remember ")
-        or command.startswith("remember that ")
-    ):
+           # REMEMBER
+    remember_phrases = [
+        "remember ",
+        "remember that ",
+        "please remember ",
+        "please remember that ",
+        "don't forget ",
+        "do not forget ",
+    ]
+
+    if any(command.startswith(phrase) for phrase in remember_phrases):
         return "remember"
 
     # CONTEXT RECALL
