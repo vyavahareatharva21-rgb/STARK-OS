@@ -2,6 +2,7 @@ from core.brain import think
 from core.memory import add_history
 from core.personality import shutdown_message
 from core.intent import detect_intent
+from voice.speaker import speak
 
 from ui.interface import (
     startup_screen,
@@ -27,7 +28,6 @@ def get_processing_message(intent):
 
 def main():
     startup_screen()
-
     while True:
         try:
             user_input = input(prompt()).strip()
@@ -63,6 +63,7 @@ def main():
             add_history(user_input, response_text)
 
             response(response_text)
+            speak(response_text)
 
         except KeyboardInterrupt:
             print()

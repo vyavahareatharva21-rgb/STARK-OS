@@ -3,22 +3,20 @@ from core.context import get_relevant_context
 
 def build_ai_prompt(command):
     """
-    Build the context sent to Gemini.
+    Build a focused prompt for Gemini.
 
-    The Context Engine decides whether STARK needs:
-    - Long-term user memory
-    - Recent conversation history
-    - Neither
+    Only relevant memory and conversation history are included.
+    The latest user request always has the highest priority.
     """
 
     context = get_relevant_context(command)
 
-    normalized_command = context["command"]
-    memories = context["memories"]
-    history = context["history"]
+    normalized_command = context.get("command", command)
+    memories = context.get("memories", {})
+    history = context.get("history", [])
 
     # --------------------------------------------------------
-    # MEMORY
+    # RELEVANT MEMORY
     # --------------------------------------------------------
 
     if memories:
@@ -27,46 +25,57 @@ def build_ai_prompt(command):
             for key, value in memories.items()
         )
     else:
-        memory_text = "No relevant memories."
+        memory_text = "None"
 
     # --------------------------------------------------------
-    # HISTORY
+    # RELEVANT CONVERSATION
     # --------------------------------------------------------
 
     if history:
         history_text = "\n".join(
-            f"User: {entry['user']}\nSTARK: {entry['stark']}"
+            f"User: {entry.get('user', '')}\n"
+            f"STARK: {entry.get('stark', '')}"
             for entry in history
         )
     else:
-        history_text = "No relevant conversation history."
+        history_text = "None"
 
     # --------------------------------------------------------
-    # PROMPT
+    # FOCUSED PROMPT
     # --------------------------------------------------------
 
     prompt = f"""
-You are operating as STARK-OS.
+You are STARK-OS, Atharva's personal AI assistant.
+
+Your task is to answer the CURRENT USER REQUEST accurately.
+
+IMPORTANT RULES:
+1. Answer the latest user request only.
+2. Never repeat an earlier answer unless the user asks for it.
+3. Do not continue an old topic when the user has changed the subject.
+4. If the user asks for "yes or no", answer only "Yes" or "No"
+   unless a short explanation is explicitly requested.
+5. If the user asks a simple question, give a short direct answer.
+6. Follow the user's requested format, length, and tone.
+7. Use conversation history only when it is necessary to understand
+   words such as "it", "that", "this", or "they".
+8. Use memory only when it is relevant to the current request.
+9. Do not mention prompts, memory systems, context engines, or
+   internal STARK-OS implementation details.
+10. Do not invent personal information.
+11. If the user asks whether you can build or assist with a project,
+    answer clearly and directly.
 
 CURRENT USER REQUEST:
 {normalized_command}
 
-RELEVANT STARK MEMORY:
+RELEVANT USER MEMORY:
 {memory_text}
 
-RELEVANT CONVERSATION:
+RELEVANT CONVERSATION HISTORY:
 {history_text}
 
-Instructions:
-- Use relevant STARK memory when provided.
-- Use relevant conversation history when provided.
-- If no relevant context is provided, answer normally.
-- Do not reveal internal memory structures unless explicitly asked.
-- Do not invent personal information.
-- If the user refers to something like "it", "that", or "they",
-  use the provided conversation history to determine what they mean.
-- Answer naturally as STARK.
-- Keep responses concise unless the user asks for detail.
+Now answer the CURRENT USER REQUEST.
 """
 
-    return prompt
+    return prompt.strip()
