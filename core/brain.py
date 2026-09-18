@@ -592,6 +592,16 @@ def think(command):
             "show files in ",
             "list contents of ",
             "show contents of ",
+            "what's in ",
+            "what is in ",
+            "whats in ",
+            "what's inside ",
+            "what is inside ",
+            "whats inside ",
+            "show me what's in ",
+            "show me what is in ",
+            "show me what's inside ",
+            "show me what is inside ",
         )
 
         folder_name = None
@@ -639,6 +649,10 @@ def think(command):
         prefixes = (
             "create folder ",
             "make a folder named ",
+            "create a folder called ",
+            "create a new folder called ",
+            "make a folder called ",
+            "make a new folder called ",
         )
 
         folder_name = None
@@ -658,10 +672,12 @@ def think(command):
         if folder_path is None:
             return "I cannot create folders outside the STARK workspace."
 
+        normalized_folder_command = f"create folder {folder_name}"
+
         request_action(
             "folder_create",
             str(folder_path),
-            lambda: process_command(command_for_name),
+            lambda: process_command(normalized_folder_command),
         )
 
         return (

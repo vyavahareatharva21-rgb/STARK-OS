@@ -178,7 +178,25 @@ def detect_intent(command):
         "list contents of ",
         "show contents of ",
     ]
+
     if any(command.startswith(phrase) for phrase in folder_list_phrases):
+        return "folder_list"
+
+    # NATURAL FOLDER LISTING
+    natural_folder_list_phrases = [
+        "what's in ",
+        "what is in ",
+        "whats in ",
+        "what's inside ",
+        "what is inside ",
+        "whats inside ",
+        "show me what's in ",
+        "show me what is in ",
+        "show me what's inside ",
+        "show me what is inside ",
+    ]
+
+    if any(command.startswith(phrase) for phrase in natural_folder_list_phrases):
         return "folder_list"
 
     # WORKSPACE LISTING
@@ -301,6 +319,10 @@ def detect_intent(command):
     folder_create_phrases = [
         "create folder ",
         "make a folder named ",
+        "create a folder called ",
+        "create a new folder called ",
+        "make a folder called ",
+        "make a new folder called ",
     ]
 
     if any(command.startswith(phrase) for phrase in folder_create_phrases):
