@@ -1101,7 +1101,7 @@ def think(command, intent=None):
         except Exception as error:
             debug(f"Gemini AI ERROR: {error}")
 
-            return "My primary AI service is temporarily unavailable. Please try again later."
+            return "I'm having trouble connecting to my AI system right now."
 
     # --------------------------------------------------------
     # Normal local commands
