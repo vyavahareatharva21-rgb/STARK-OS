@@ -1,4 +1,5 @@
 import os
+from time import perf_counter
 
 from dotenv import load_dotenv
 from google import genai
@@ -65,11 +66,18 @@ Rules:
         else:
             contents = prompt.strip()
 
+        request_start = perf_counter()
+
         response = self.client.models.generate_content(
             model=self.model,
             contents=contents,
             config=self.config,
         )
+
+        request_time = perf_counter() - request_start
+
+        if os.getenv("STARK_DEBUG", "0") == "1":
+            print(f"[DEBUG] Gemini API time: {request_time:.3f}s")
 
         if not response or not response.text:
             return "I received an empty response from my AI system."
