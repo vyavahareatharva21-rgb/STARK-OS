@@ -6,3 +6,12 @@ venv/
 
 memory/memory.json
 .env
+
+# STARK-OS local runtime data
+jarvis_workspace/
+memory/
+voice/
+
+# Local backup files
+*.backup
+*.natural-backup

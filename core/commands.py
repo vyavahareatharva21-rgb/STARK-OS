@@ -339,11 +339,12 @@ def create_folder(folder_name):
     return f"Folder '{folder_name}' created successfully."
 
 
-def process_command(command):
+def process_command(command, intent=None):
     command = command.strip()
     lower_command = command.lower()
 
-    intent = detect_intent(command)
+    if intent is None:
+        intent = detect_intent(command)
 
     # ========================================================
     # GREETING
@@ -388,12 +389,21 @@ def process_command(command):
 
         return launch_application(app_name)
 
+
     # ========================================================
     # CREATE FILE
     # ========================================================
 
     elif lower_command.startswith("create file "):
         filename = command[len("create file "):].strip()
+
+        if not filename:
+            return "Please provide a filename."
+
+        return create_file(filename)
+
+    elif lower_command.startswith("create a file "):
+        filename = command[len("create a file "):].strip()
 
         if not filename:
             return "Please provide a filename."
@@ -407,6 +417,32 @@ def process_command(command):
             return "Please provide a filename."
 
         return create_file(filename)
+
+    elif lower_command.startswith("make a file called "):
+        filename = command[len("make a file called "):].strip()
+
+        if not filename:
+            return "Please provide a filename."
+
+        return create_file(filename)
+
+    elif lower_command.startswith("make a new file called "):
+        filename = command[len("make a new file called "):].strip()
+
+        if not filename:
+            return "Please provide a filename."
+
+        return create_file(filename)
+
+    elif lower_command.startswith("make a new file named "):
+        filename = command[len("make a new file named "):].strip()
+
+        if not filename:
+            return "Please provide a filename."
+
+        return create_file(filename)
+
+
 
     # ========================================================
     # WRITE FILE

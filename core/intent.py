@@ -135,7 +135,11 @@ def detect_intent(command):
     # FILE CREATION
     file_create_phrases = [
         "create file ",
+        "create a file ",
         "make a file named ",
+        "make a file called ",
+        "make a new file called ",
+        "make a new file named ",
     ]
 
     if any(command.startswith(phrase) for phrase in file_create_phrases):

@@ -43,7 +43,7 @@ Rules:
         self.config = types.GenerateContentConfig(
             system_instruction=self.system_instruction,
             temperature=0.2,
-            max_output_tokens=2048,
+            max_output_tokens=512,
             automatic_function_calling=types.AutomaticFunctionCallingConfig(
                 disable=True
             ),

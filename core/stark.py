@@ -39,7 +39,7 @@ def main():
 
             # Exit immediately without a processing state.
             if intent == "exit":
-                response_text = think(user_input)
+                response_text = think(user_input, intent)
 
                 if response_text == "EXIT":
                     print()

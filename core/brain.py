@@ -2,7 +2,6 @@ import os
 from time import perf_counter
 
 from core.commands import process_command
-from core.terminal import execute_command
 from core.permissions import (
     request_action,
     has_pending_action,
@@ -14,7 +13,6 @@ from core.intent import detect_intent
 from core.context import resolve_command
 from core.ai_context import build_ai_prompt
 from ai.engine import ai_engine
-from ai.local_engine import local_ai_engine
 
 DEBUG = os.getenv("STARK_DEBUG", "0") == "1"
 
@@ -44,7 +42,7 @@ def is_yes_no_request(command):
     return any(phrase in command for phrase in yes_no_phrases)
 
 
-def think(command):
+def think(command, intent=None):
     """
     Main STARK reasoning pipeline.
 
@@ -68,46 +66,7 @@ def think(command):
 
     original_command = command.strip()
 
-    # --------------------------------------------------------
-    # Intent detection
-    # --------------------------------------------------------
 
-    intent_start = perf_counter()
-    intent = detect_intent(original_command)
-
-    debug(
-        f"Intent detected: {intent} "
-        f"({perf_counter() - intent_start:.3f}s)"
-    )
-
-    if intent == "exit":
-        return "EXIT"
-
-    # --------------------------------------------------------
-    # Direct yes/no responses
-    # --------------------------------------------------------
-
-    if is_yes_no_request(original_command):
-        debug("Direct yes/no response triggered")
-        return "Yes."
-
-    # --------------------------------------------------------
-    # Resolve conversational context
-    # --------------------------------------------------------
-
-    context_start = perf_counter()
-    resolved_command = resolve_command(original_command)
-
-    debug(
-        f"Context resolution completed "
-        f"({perf_counter() - context_start:.3f}s)"
-    )
-
-    if resolved_command != original_command.lower().strip():
-        debug(
-            f"Context resolved: "
-            f"{original_command} -> {resolved_command}"
-        )
 
     # --------------------------------------------------------
     # PENDING ACTION CONFIRMATION
@@ -142,6 +101,48 @@ def think(command):
         ):
             cancel_action()
             return "Action cancelled."
+
+    # --------------------------------------------------------
+    # Intent detection
+    # --------------------------------------------------------
+
+    if intent is None:
+        intent_start = perf_counter()
+        intent = detect_intent(original_command)
+
+        debug(
+            f"Intent detected: {intent} "
+            f"({perf_counter() - intent_start:.3f}s)"
+        )
+    else:
+        debug(f"Intent received from caller: {intent}")
+
+    # --------------------------------------------------------
+    # Direct yes/no responses
+    # --------------------------------------------------------
+
+    if is_yes_no_request(original_command):
+        debug("Direct yes/no response triggered")
+        return "Yes."
+
+    # --------------------------------------------------------
+    # Resolve conversational context
+    # --------------------------------------------------------
+
+    context_start = perf_counter()
+    resolved_command = resolve_command(original_command)
+
+    debug(
+        f"Context resolution completed "
+        f"({perf_counter() - context_start:.3f}s)"
+    )
+
+    if resolved_command != original_command.lower().strip():
+        debug(
+            f"Context resolved: "
+            f"{original_command} -> {resolved_command}"
+        )
+
 
     # --------------------------------------------------------
     # LIST APPROVED APPLICATIONS
@@ -584,6 +585,7 @@ def think(command):
             "Shall I proceed?"
         )
 
+
     if intent == "folder_list":
         from core.commands import list_folder
 
@@ -685,17 +687,20 @@ def think(command):
             "in the STARK workspace. Shall I proceed?"
         )
 
-    # --------------------------------------------------------
+        # --------------------------------------------------------
     # CREATE FILE PERMISSION
     # --------------------------------------------------------
 
     if intent == "file_create":
-        normalized_command = resolved_command
         command_for_name = original_command
 
         prefixes = (
             "create file ",
+            "create a file ",
             "make a file named ",
+            "make a file called ",
+            "make a new file called ",
+            "make a new file named ",
         )
 
         filename = None
@@ -704,6 +709,12 @@ def think(command):
             if command_for_name.lower().startswith(prefix):
                 filename = command_for_name[len(prefix):].strip()
                 break
+
+        if filename:
+            for marker in ("called ", "named "):
+                if filename.lower().startswith(marker):
+                    filename = filename[len(marker):].strip()
+                    break
 
         if not filename:
             return "Please provide a filename."
@@ -715,17 +726,19 @@ def think(command):
         if file_path is None:
             return "I cannot create files outside the STARK workspace."
 
+        # Build a clean command for the confirmation callback.
+        clean_command = f"create file {filename}"
+
         request_action(
             "file_create",
             str(file_path),
-            lambda: process_command(normalized_command),
+            lambda: process_command(clean_command),
         )
 
         return (
             f"I can create '{filename}' in the STARK workspace. "
             "Shall I proceed?"
         )
-
     # --------------------------------------------------------
     # FILE READ PERMISSION
     # --------------------------------------------------------
@@ -1031,7 +1044,7 @@ def think(command):
     # --------------------------------------------------------
 
     if intent == "file_operation":
-        response = process_command(resolved_command)
+        response = process_command(resolved_command, intent=intent)
 
         debug(
             f"File operation completed "
@@ -1045,7 +1058,7 @@ def think(command):
     # --------------------------------------------------------
 
     if intent in ("context_recall", "recall"):
-        response = process_command(resolved_command)
+        response = process_command(resolved_command, intent=intent)
 
         debug(
             f"Local command completed "
@@ -1087,35 +1100,14 @@ def think(command):
 
         except Exception as error:
             debug(f"Gemini AI ERROR: {error}")
-            debug("Switching to local Ollama AI engine")
 
-            try:
-                local_start = perf_counter()
-
-                response = local_ai_engine.ask(resolved_command)
-
-                debug(
-                    f"Local Ollama response received "
-                    f"({perf_counter() - local_start:.3f}s)"
-                )
-
-                debug(
-                    f"Total reasoning time "
-                    f"({perf_counter() - start_time:.3f}s)"
-                )
-
-                return response
-
-            except Exception as local_error:
-                debug(f"LOCAL AI ERROR: {local_error}")
-
-                return "I'm having trouble connecting to my AI system right now."
+            return "My primary AI service is temporarily unavailable. Please try again later."
 
     # --------------------------------------------------------
     # Normal local commands
     # --------------------------------------------------------
 
-    response = process_command(resolved_command)
+    response = process_command(resolved_command, intent=intent)
 
     debug(
         f"Local command completed "
